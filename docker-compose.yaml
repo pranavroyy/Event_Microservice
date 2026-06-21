@@ -1,9 +1,9 @@
 # Docker Compose - EventFlow Development Environment
 
 services:
-  # ============================================
+  # ==========================================
   # INFRASTRUCTURE
-  # ============================================
+  # ==========================================
 
   # Zookeeper (required for Kafka)
   zookeeper:
@@ -59,10 +59,10 @@ services:
     image: postgres:16-alpine
     container_name: event_bridge-postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       POSTGRES_USER: event_bridge
-      POSTGRES_PASSWORD: eventflow_password
+      POSTGRES_PASSWORD: event_bridge_password
       POSTGRES_DB: event_bridge
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -81,9 +81,9 @@ services:
     volumes:
       - redis-data:/data
 
-  # ============================================
+  # =========================================
   # DEVELOPMENT TOOLS
-  # ============================================
+  # =========================================
 
   # Mailhog (email testing)
   mailhog:
