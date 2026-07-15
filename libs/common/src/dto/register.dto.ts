@@ -1,4 +1,4 @@
-export class RegisterSto{
+export class RegisterDto{
     email:string;
     password:string;
     name:string;

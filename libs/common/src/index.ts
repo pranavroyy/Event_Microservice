@@ -7,5 +7,5 @@ export * from './constants';
 export * from './utils';
 //interfaces
 export * from './interfaces';
-//
+//DTO.
 export * from './dto';
