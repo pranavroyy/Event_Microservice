@@ -116,10 +116,6 @@ services:
     depends_on:
       auth-service:
          condition: service_started
-      events-service:
-          condition: service_started
-      tickets-service:
-          condition: service_started
     restart: unless-stopped
 
 
@@ -135,7 +131,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
-      - DATABASE_URL=postgres://event_bridge:eventflow_password@postgres:5432/event_bridge
+      - DATABASE_URL=postgres://event_bridge:event_bridge_password@postgres:5432/event_bridge
       - KAFKA_BROKER=kafka:29092
       - JWT_SECRET=your_jwt_secret_key
     depends_on:
@@ -145,67 +141,72 @@ services:
         condition: service_started
     restart: unless-stopped
   
-  events-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE: events-service
-    container_name: event_bridge-events-service
-    ports:
-      - "3003:3003"
-    environment:
-      - NODE_ENV=production
-      - PORT=3003
-      - DATABASE_URL=postgres://event_bridge:eventflow_password@postgres:5432/event_bridge
-      - KAFKA_BROKER=kafka:29092
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-  
-  tickets-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE: tickets-service
-    container_name: event_bridge-tickets-service
-    ports:
-      - "3004:3004"
-    environment:
-      - NODE_ENV=production
-      - PORT=3004
-      - DATABASE_URL=postgres://event_bridge:eventflow_password@postgres:5432/event_bridge
-      - KAFKA_BROKER=kafka:29092
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
-  
-  notifications-service:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        SERVICE: notifications-service
-    container_name: event_bridge-notifications-service
-    ports:
-      - "3006:3006"
-    environment:
-      - NODE_ENV=production
-      - PORT=3006
-      - DATABASE_URL=postgres://event_bridge:eventflow_password@postgres:5432/event_bridge
-      - KAFKA_BROKER=kafka:29092
-      - SMTP_HOST=mailhog
-      - SMTP_PORT=1025
-    depends_on:
-      postgres:
-        condition: service_healthy
-      mailhog:
-        condition: service_started
-    restart: unless-stopped
-    
+  # events-service, tickets-service, notifications-service are commented out
+  # for now because those apps don't exist in apps/ yet. Uncomment each one
+  # once you've actually built that app in the tutorial, otherwise their
+  # builds will fail and can block api-gateway from starting.
+
+  # events-service:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       SERVICE: events-service
+  #   container_name: event_bridge-events-service
+  #   ports:
+  #     - "3003:3003"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - PORT=3003
+  #     - DATABASE_URL=postgres://event_bridge:event_bridge_password@postgres:5432/event_bridge
+  #     - KAFKA_BROKER=kafka:29092
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+
+  # tickets-service:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       SERVICE: tickets-service
+  #   container_name: event_bridge-tickets-service
+  #   ports:
+  #     - "3004:3004"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - PORT=3004
+  #     - DATABASE_URL=postgres://event_bridge:event_bridge_password@postgres:5432/event_bridge
+  #     - KAFKA_BROKER=kafka:29092
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   restart: unless-stopped
+
+  # notifications-service:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       SERVICE: notifications-service
+  #   container_name: event_bridge-notifications-service
+  #   ports:
+  #     - "3006:3006"
+  #   environment:
+  #     - NODE_ENV=production
+  #     - PORT=3006
+  #     - DATABASE_URL=postgres://event_bridge:event_bridge_password@postgres:5432/event_bridge
+  #     - KAFKA_BROKER=kafka:29092
+  #     - SMTP_HOST=mailhog
+  #     - SMTP_PORT=1025
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #     mailhog:
+  #       condition: service_started
+  #   restart: unless-stopped
+
 
 volumes:
   zookeeper-data:
